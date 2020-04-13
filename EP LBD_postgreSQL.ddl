@@ -1,17 +1,3 @@
--- *********************************************
--- * SQL PostgreSQL generation                 
--- *--------------------------------------------
--- * DB-MAIN version: 11.0.1              
--- * Generator date: Dec  4 2018              
--- * Generation date: Mon Apr 13 14:37:43 2020 
--- * LUN file: D:\Documents\Projects\lbd-ep-universidade\EP LBD.lun 
--- * Schema: universidade/1-1 
--- ********************************************* 
-
-
--- Database Section
--- ________________ 
-
 create database universidade;
 
 
@@ -19,7 +5,7 @@ create database universidade;
 -- _____________ 
 
 create table ALUNO (
-     cod_aluno serial not null,
+     cod_aluno numeric(10) not null,
      cpf varchar(11) not null,
      nome varchar(20) not null,
      sobrenome varchar(50) not null,
@@ -40,7 +26,7 @@ create table ALUNO_ESPECIAL (
      constraint FKALU_ALU_ID primary key (cod_aluno));
 
 create table ARTIGO (
-     cod_artigo serial not null,
+     cod_artigo numeric(10) not null,
      titulo varchar(20) not null,
      subtitulo varchar(50) not null,
      tema varchar(20) not null,
@@ -48,7 +34,7 @@ create table ARTIGO (
      constraint ID_ARTIGO primary key (cod_artigo));
 
 create table ATIVIDADE_EXTRACURRICULAR (
-     cod_atividade serial not null,
+     cod_atividade numeric(10) not null,
      nome_atividade varchar(40) not null,
      data_hora_inicio date not null,
      data_hora_fim date not null,
@@ -70,7 +56,7 @@ create table AVALIADO_EM (
      constraint FKAVA_SEM_ID primary key (id_ano, id_semestre));
 
 create table CURSO (
-     cod_curso serial not null,
+     cod_curso numeric(10) not null,
      nome_curso char(1) not null,
      area_conhecimento char(1) not null,
      data_inicio date not null,
@@ -94,7 +80,7 @@ create table DIRETOR (
      constraint FKFUN_DIR_ID primary key (cod_funcionario));
 
 create table DISCIPLINA (
-     codigo_disciplina serial not null,
+     codigo_disciplina numeric(10) not null,
      nome_disciplina varchar(30) not null,
      constraint ID_DISCIPLINA_ID primary key (codigo_disciplina));
 
@@ -109,12 +95,12 @@ create table EQUIPAM (
      constraint ID_EQUIPAM primary key (cod_patrimonio, cod_local));
 
 create table ESPACO (
-     cod_local serial not null,
+     cod_local numeric(10) not null,
      capacidade numeric(3) not null,
      constraint ID_ESPACO_ID primary key (cod_local));
 
 create table ESPECIALIDADE (
-     ID_ESP serial not null,
+     ID_ESP numeric(10) not null,
      area_conhecimento varchar(20) not null,
      nome_especialidade varchar(20) not null,
      constraint ID_ID primary key (ID_ESP));
@@ -125,7 +111,7 @@ create table ESPECIALIZA (
      constraint ID_ESPECIALIZA primary key (ID_ESP, cod_funcionario));
 
 create table FUNCIONARIO (
-     cod_funcionario serial not null,
+     cod_funcionario numeric(10) not null,
      cpf varchar(11) not null,
      nome varchar(20) not null,
      sobrenome varchar(50) not null,
@@ -140,7 +126,7 @@ create table GRADUANDO (
      constraint FKALU_GRA_ID primary key (cod_aluno));
 
 create table GRUPO_EXTENSAO (
-     cod_grupo serial not null,
+     cod_grupo numeric(10) not null,
      nome_grupo varchar(20) not null,
      data_formacao date not null,
      constraint ID_GRUPO_EXTENSAO_ID primary key (cod_grupo));
@@ -176,7 +162,7 @@ create table PARTICIPA (
      constraint ID_PARTICIPA primary key (cod_atividade, cod_aluno));
 
 create table PATRIMONIO (
-     cod_patrimonio serial not null,
+     cod_patrimonio numeric(10) not null,
      nome_patrimonio varchar(30) not null,
      tipo_patrimonio varchar(20) not null,
      constraint ID_PATRIMONIO primary key (cod_patrimonio));
@@ -224,7 +210,7 @@ create table topico (
 --Not implemented
 --alter table ALUNO add constraint ID_ALUNO_CHK
 --     check(exists(select * from AUTOR_DE
---                  where AUTOR_DE.cod_aluno = cod_aluno)); 
+                  where AUTOR_DE.cod_aluno = cod_aluno)); 
 
 --Not implemented
 --alter table ALUNO add constraint ID_ALUNO_CHK
@@ -411,7 +397,8 @@ alter table OFERECIDA_EM add constraint FKOFE_DIS_FK
      foreign key (codigo_disciplina)
      references DISCIPLINA;
 
-alter table OFERECIDA_EM add constraint FKOFE_PRO_FK
+alter
+table OFERECIDA_EM add constraint FKOFE_PRO_FK
      foreign key (cod_funcionario)
      references PROFESSOR;
 
@@ -569,4 +556,3 @@ create index FKREA_DIS_IND
 
 create index FKREA_ALU_IND
      on REALIZA_MATRICULA (cod_aluno);
-
