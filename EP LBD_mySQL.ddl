@@ -3,17 +3,17 @@
 -- *--------------------------------------------
 -- * DB-MAIN version: 11.0.1              
 -- * Generator date: Dec  4 2018              
--- * Generation date: Mon Apr 13 11:29:24 2020 
+-- * Generation date: Mon Apr 13 14:37:36 2020 
 -- * LUN file: D:\Documents\Projects\lbd-ep-universidade\EP LBD.lun 
--- * Schema: universidade_rel/1-1 
+-- * Schema: universidade/1-1 
 -- ********************************************* 
 
 
 -- Database Section
 -- ________________ 
 
-create database universidade_rel;
-use universidade_rel;
+create database universidade;
+use universidade;
 
 
 -- Tables Section
@@ -44,6 +44,7 @@ create table ARTIGO (
      cod_artigo int not null auto_increment,
      titulo varchar(20) not null,
      subtitulo varchar(50) not null,
+     tema varchar(20) not null,
      data_publicacao date not null,
      constraint ID_ARTIGO_ID primary key (cod_artigo));
 
@@ -58,15 +59,16 @@ create table ATIVIDADE_EXTRACURRICULAR (
 create table AUTOR_DE (
      cod_aluno int not null,
      cod_artigo int not null,
-     constraint ID_AUTOR_DE_ID primary key (cod_aluno, cod_artigo));
+     constraint ID_AUTOR_DE_ID primary key (cod_artigo, cod_aluno));
 
 create table AVALIADO_EM (
      id_ano int not null,
      id_semestre int not null,
      nota decimal(2,1) not null,
+     presenca int not null,
      codigo_disciplina int not null,
      cod_aluno int not null,
-     constraint FKAVA_SEM_ID primary key (id_ano, id_semestre, codigo_disciplina, cod_aluno));
+     constraint FKAVA_SEM_ID primary key (id_ano, id_semestre));
 
 create table CURSO (
      cod_curso int not null auto_increment,
@@ -75,7 +77,6 @@ create table CURSO (
      data_inicio date not null,
      qtd_semestres int not null,
      carga_horaria int not null,
-     codigo_disciplina int not null,
      cod_aluno int not null,
      cod_funcionario int not null,
      constraint ID_CURSO_ID primary key (cod_curso));
@@ -98,16 +99,15 @@ create table DISCIPLINA (
      nome_disciplina varchar(30) not null,
      constraint ID_DISCIPLINA_ID primary key (codigo_disciplina));
 
-create table mandato (
-     cod_funcionario int not null,
-     data_inicio date not null,
-     data_fim date not null,
-     constraint IDmandato_ID primary key (cod_funcionario));
+create table EMENTA (
+     cod_curso int not null,
+     codigo_disciplina int not null,
+     constraint ID_EMENTA_ID primary key (cod_curso, codigo_disciplina));
 
 create table EQUIPAM (
      cod_local int not null,
      cod_patrimonio int not null,
-     constraint ID_EQUIPAM_ID primary key (cod_local, cod_patrimonio));
+     constraint ID_EQUIPAM_ID primary key (cod_patrimonio, cod_local));
 
 create table ESPACO (
      cod_local int not null auto_increment,
@@ -123,15 +123,16 @@ create table ESPECIALIDADE (
 create table ESPECIALIZA (
      ID_ESP int not null,
      cod_funcionario int not null,
-     constraint ID_ESPECIALIZA_ID primary key (cod_funcionario, ID_ESP));
+     constraint ID_ESPECIALIZA_ID primary key (ID_ESP, cod_funcionario));
 
 create table FUNCIONARIO (
      cod_funcionario int not null auto_increment,
      cpf varchar(11) not null,
      nome varchar(20) not null,
      sobrenome varchar(50) not null,
-     data_nascimento varchar(8) not null,
+     data_nascimento date not null,
      salario decimal(5,2) not null,
+     POS_cod_funcionario int not null,
      constraint ID_FUNCIONARIO_ID primary key (cod_funcionario));
 
 create table GRADUANDO (
@@ -145,10 +146,16 @@ create table GRUPO_EXTENSAO (
      data_formacao date not null,
      constraint ID_GRUPO_EXTENSAO_ID primary key (cod_grupo));
 
+create table mandato (
+     cod_funcionario int not null,
+     data_inicio date not null,
+     data_fim date not null,
+     constraint ID_mandato_ID primary key (cod_funcionario, data_inicio, data_fim));
+
 create table MEMBRO_DE (
      cod_aluno int not null,
      cod_grupo int not null,
-     constraint ID_MEMBRO_DE_ID primary key (cod_grupo, cod_aluno));
+     constraint ID_MEMBRO_DE_ID primary key (cod_aluno, cod_grupo));
 
 create table OFERECIDA_EM (
      id_ano int not null,
@@ -156,18 +163,18 @@ create table OFERECIDA_EM (
      codigo_disciplina int not null,
      cod_local int not null,
      cod_funcionario int not null,
-     constraint FKOFE_SEM_ID primary key (codigo_disciplina, id_ano, id_semestre, cod_local, cod_funcionario),
+     constraint FKOFE_SEM_ID primary key (id_ano, id_semestre),
      constraint FKOFE_DIS_ID unique (codigo_disciplina));
 
 create table ORGANIZA (
      cod_atividade int not null,
      cod_grupo int not null,
-     constraint ID_ORGANIZA_ID primary key (cod_grupo, cod_atividade));
+     constraint ID_ORGANIZA_ID primary key (cod_atividade, cod_grupo));
 
 create table PARTICIPA (
      cod_aluno int not null,
      cod_atividade int not null,
-     constraint ID_PARTICIPA_ID primary key (cod_aluno, cod_atividade));
+     constraint ID_PARTICIPA_ID primary key (cod_atividade, cod_aluno));
 
 create table PATRIMONIO (
      cod_patrimonio int not null auto_increment,
@@ -182,7 +189,7 @@ create table POS_GRADUANDO (
 create table PRE_REQUISITO (
      cod_disciplina int not null,
      cod_requisito int not null,
-     constraint ID_PRE_REQUISITO_ID primary key (cod_disciplina, cod_requisito));
+     constraint ID_PRE_REQUISITO_ID primary key (cod_requisito, cod_disciplina));
 
 create table PROFESSOR (
      cod_funcionario int not null,
@@ -197,7 +204,7 @@ create table REALIZA_MATRICULA (
      id_ano int not null,
      id_semestre int not null,
      timestamp date not null,
-     constraint ID_REALIZA_MATRICULA_ID primary key (cod_aluno, codigo_disciplina, id_ano, id_semestre));
+     constraint ID_REALIZA_MATRICULA_ID primary key (id_ano, id_semestre, codigo_disciplina, cod_aluno));
 
 create table SEMESTRE (
      id_ano int not null,
@@ -240,7 +247,7 @@ create table topico (
 --     check(exists(select * from REALIZA_MATRICULA
 --                  where REALIZA_MATRICULA.cod_aluno = cod_aluno)); 
 
-alter table ALUNO add constraint EXCL_ALUNO
+alter table ALUNO add constraint EXTONE_ALUNO
      check((POS_GRADUANDO is not null and GRADUANDO is null and ALUNO_ESPECIAL is null)
            or (POS_GRADUANDO is null and GRADUANDO is not null and ALUNO_ESPECIAL is null)
            or (POS_GRADUANDO is null and GRADUANDO is null and ALUNO_ESPECIAL is not null)); 
@@ -253,16 +260,16 @@ alter table ATIVIDADE_EXTRACURRICULAR add constraint FKREALIZADA_EM_FK
      foreign key (cod_local)
      references ESPACO (cod_local);
 
-alter table AUTOR_DE add constraint FKAUT_ART_FK
+alter table AUTOR_DE add constraint FKAUT_ART
      foreign key (cod_artigo)
      references ARTIGO (cod_artigo);
 
-alter table AUTOR_DE add constraint FKAUT_ALU
+alter table AUTOR_DE add constraint FKAUT_ALU_FK
      foreign key (cod_aluno)
      references ALUNO (cod_aluno);
 
 alter table AVALIADO_EM add constraint FKAVA_SEM_FK
-     foreign key (id_ano, id_semestre, codigo_disciplina, cod_aluno)
+     foreign key (id_ano, id_semestre)
      references SEMESTRE (id_ano, id_semestre);
 
 alter table AVALIADO_EM add constraint FKAVA_DIS_FK
@@ -273,9 +280,10 @@ alter table AVALIADO_EM add constraint FKAVA_ALU_FK
      foreign key (cod_aluno)
      references ALUNO (cod_aluno);
 
-alter table CURSO add constraint FKEMENTA_FK
-     foreign key (codigo_disciplina)
-     references DISCIPLINA (codigo_disciplina);
+-- Not implemented
+-- alter table CURSO add constraint ID_CURSO_CHK
+--     check(exists(select * from EMENTA
+--                  where EMENTA.cod_curso = cod_curso)); 
 
 alter table CURSO add constraint FKCURSA_FK
      foreign key (cod_aluno)
@@ -289,6 +297,11 @@ alter table DEPENDENTE add constraint ID_DEPEN_FUNCI_FK
      foreign key (cod_funcionario)
      references FUNCIONARIO (cod_funcionario);
 
+-- Not implemented
+-- alter table DIRETOR add constraint FKFUN_DIR_CHK
+--     check(exists(select * from mandato
+--                  where mandato.cod_funcionario = cod_funcionario)); 
+
 alter table DIRETOR add constraint FKFUN_DIR_FK
      foreign key (cod_funcionario)
      references FUNCIONARIO (cod_funcionario);
@@ -300,8 +313,8 @@ alter table DIRETOR add constraint FKFUN_DIR_FK
 
 -- Not implemented
 -- alter table DISCIPLINA add constraint ID_DISCIPLINA_CHK
---     check(exists(select * from CURSO
---                  where CURSO.codigo_disciplina = codigo_disciplina)); 
+--     check(exists(select * from EMENTA
+--                  where EMENTA.codigo_disciplina = codigo_disciplina)); 
 
 -- Not implemented
 -- alter table DISCIPLINA add constraint ID_DISCIPLINA_CHK
@@ -318,15 +331,19 @@ alter table DIRETOR add constraint FKFUN_DIR_FK
 --     check(exists(select * from REALIZA_MATRICULA
 --                  where REALIZA_MATRICULA.codigo_disciplina = codigo_disciplina)); 
 
-alter table mandato add constraint IDmandato_FK
-     foreign key (cod_funcionario)
-     references DIRETOR (cod_funcionario);
+alter table EMENTA add constraint FKEME_DIS_FK
+     foreign key (codigo_disciplina)
+     references DISCIPLINA (codigo_disciplina);
 
-alter table EQUIPAM add constraint FKEQU_PAT_FK
+alter table EMENTA add constraint FKEME_CUR
+     foreign key (cod_curso)
+     references CURSO (cod_curso);
+
+alter table EQUIPAM add constraint FKEQU_PAT
      foreign key (cod_patrimonio)
      references PATRIMONIO (cod_patrimonio);
 
-alter table EQUIPAM add constraint FKEQU_ESP
+alter table EQUIPAM add constraint FKEQU_ESP_FK
      foreign key (cod_local)
      references ESPACO (cod_local);
 
@@ -345,16 +362,16 @@ alter table EQUIPAM add constraint FKEQU_ESP
 --     check(exists(select * from ESPECIALIZA
 --                  where ESPECIALIZA.ID_ESP = ID_ESP)); 
 
-alter table ESPECIALIZA add constraint FKESP_PRO
+alter table ESPECIALIZA add constraint FKESP_PRO_FK
      foreign key (cod_funcionario)
      references PROFESSOR (cod_funcionario);
 
-alter table ESPECIALIZA add constraint FKESP_ESP_FK
+alter table ESPECIALIZA add constraint FKESP_ESP
      foreign key (ID_ESP)
      references ESPECIALIDADE (ID_ESP);
 
-alter table FUNCIONARIO add constraint ID_FUNCIONARIO_FK
-     foreign key (cod_funcionario)
+alter table FUNCIONARIO add constraint FKPOSSUI_DEPENDENTE_FK
+     foreign key (POS_cod_funcionario)
      references DEPENDENTE (cod_funcionario);
 
 alter table GRADUANDO add constraint FKALU_GRA_FK
@@ -371,16 +388,20 @@ alter table GRADUANDO add constraint FKALU_GRA_FK
 --     check(exists(select * from PROFESSOR
 --                  where PROFESSOR.cod_grupo = cod_grupo)); 
 
-alter table MEMBRO_DE add constraint FKMEM_GRU
+alter table mandato add constraint FKDIR_man
+     foreign key (cod_funcionario)
+     references DIRETOR (cod_funcionario);
+
+alter table MEMBRO_DE add constraint FKMEM_GRU_FK
      foreign key (cod_grupo)
      references GRUPO_EXTENSAO (cod_grupo);
 
-alter table MEMBRO_DE add constraint FKMEM_ALU_FK
+alter table MEMBRO_DE add constraint FKMEM_ALU
      foreign key (cod_aluno)
      references ALUNO (cod_aluno);
 
 alter table OFERECIDA_EM add constraint FKOFE_SEM_FK
-     foreign key (codigo_disciplina, id_ano, id_semestre, cod_local, cod_funcionario)
+     foreign key (id_ano, id_semestre)
      references SEMESTRE (id_ano, id_semestre);
 
 alter table OFERECIDA_EM add constraint FKOFE_ESP_FK
@@ -395,19 +416,19 @@ alter table OFERECIDA_EM add constraint FKOFE_PRO_FK
      foreign key (cod_funcionario)
      references PROFESSOR (cod_funcionario);
 
-alter table ORGANIZA add constraint FKORG_GRU
+alter table ORGANIZA add constraint FKORG_GRU_FK
      foreign key (cod_grupo)
      references GRUPO_EXTENSAO (cod_grupo);
 
-alter table ORGANIZA add constraint FKORG_ATI_FK
+alter table ORGANIZA add constraint FKORG_ATI
      foreign key (cod_atividade)
      references ATIVIDADE_EXTRACURRICULAR (cod_atividade);
 
-alter table PARTICIPA add constraint FKPAR_ATI_FK
+alter table PARTICIPA add constraint FKPAR_ATI
      foreign key (cod_atividade)
      references ATIVIDADE_EXTRACURRICULAR (cod_atividade);
 
-alter table PARTICIPA add constraint FKPAR_ALU
+alter table PARTICIPA add constraint FKPAR_ALU_FK
      foreign key (cod_aluno)
      references ALUNO (cod_aluno);
 
@@ -420,11 +441,11 @@ alter table POS_GRADUANDO add constraint FKALU_POS_FK
      foreign key (cod_aluno)
      references ALUNO (cod_aluno);
 
-alter table PRE_REQUISITO add constraint FKPRECISA_DE_FK
+alter table PRE_REQUISITO add constraint FKPRECISA_DE
      foreign key (cod_requisito)
      references DISCIPLINA (codigo_disciplina);
 
-alter table PRE_REQUISITO add constraint FKPRE_DIS
+alter table PRE_REQUISITO add constraint FKPRE_DIS_FK
      foreign key (cod_disciplina)
      references DISCIPLINA (codigo_disciplina);
 
@@ -455,7 +476,7 @@ alter table PROFESSOR add constraint FKORIENTA_FK
      foreign key (cod_aluno)
      references POS_GRADUANDO (cod_aluno);
 
-alter table REALIZA_MATRICULA add constraint FKREA_SEM_FK
+alter table REALIZA_MATRICULA add constraint FKREA_SEM
      foreign key (id_ano, id_semestre)
      references SEMESTRE (id_ano, id_semestre);
 
@@ -463,7 +484,7 @@ alter table REALIZA_MATRICULA add constraint FKREA_DIS_FK
      foreign key (codigo_disciplina)
      references DISCIPLINA (codigo_disciplina);
 
-alter table REALIZA_MATRICULA add constraint FKREA_ALU
+alter table REALIZA_MATRICULA add constraint FKREA_ALU_FK
      foreign key (cod_aluno)
      references ALUNO (cod_aluno);
 
@@ -475,7 +496,7 @@ alter table REALIZA_MATRICULA add constraint FKREA_ALU
 -- Not implemented
 -- alter table SEMESTRE add constraint ID_SEMESTRE_CHK
 --     check(exists(select * from OFERECIDA_EM
---                  where OFERECIDA_EM.codigo_disciplina = id_ano and OFERECIDA_EM.id_ano = id_semestre)); 
+--                  where OFERECIDA_EM.id_ano = id_ano and OFERECIDA_EM.id_semestre = id_semestre)); 
 
 -- Not implemented
 -- alter table SEMESTRE add constraint ID_SEMESTRE_CHK
@@ -506,13 +527,13 @@ create index FKREALIZADA_EM_IND
      on ATIVIDADE_EXTRACURRICULAR (cod_local);
 
 create unique index ID_AUTOR_DE_IND
-     on AUTOR_DE (cod_aluno, cod_artigo);
+     on AUTOR_DE (cod_artigo, cod_aluno);
 
-create index FKAUT_ART_IND
-     on AUTOR_DE (cod_artigo);
+create index FKAUT_ALU_IND
+     on AUTOR_DE (cod_aluno);
 
 create unique index FKAVA_SEM_IND
-     on AVALIADO_EM (id_ano, id_semestre, codigo_disciplina, cod_aluno);
+     on AVALIADO_EM (id_ano, id_semestre);
 
 create index FKAVA_DIS_IND
      on AVALIADO_EM (codigo_disciplina);
@@ -522,9 +543,6 @@ create index FKAVA_ALU_IND
 
 create unique index ID_CURSO_IND
      on CURSO (cod_curso);
-
-create index FKEMENTA_IND
-     on CURSO (codigo_disciplina);
 
 create index FKCURSA_IND
      on CURSO (cod_aluno);
@@ -544,11 +562,17 @@ create unique index FKFUN_DIR_IND
 create unique index ID_DISCIPLINA_IND
      on DISCIPLINA (codigo_disciplina);
 
-create unique index ID_EQUIPAM_IND
-     on EQUIPAM (cod_local, cod_patrimonio);
+create unique index ID_EMENTA_IND
+     on EMENTA (cod_curso, codigo_disciplina);
 
-create index FKEQU_PAT_IND
-     on EQUIPAM (cod_patrimonio);
+create index FKEME_DIS_IND
+     on EMENTA (codigo_disciplina);
+
+create unique index ID_EQUIPAM_IND
+     on EQUIPAM (cod_patrimonio, cod_local);
+
+create index FKEQU_ESP_IND
+     on EQUIPAM (cod_local);
 
 create unique index ID_ESPACO_IND
      on ESPACO (cod_local);
@@ -557,13 +581,16 @@ create unique index ID_IND
      on ESPECIALIDADE (ID_ESP);
 
 create unique index ID_ESPECIALIZA_IND
-     on ESPECIALIZA (cod_funcionario, ID_ESP);
+     on ESPECIALIZA (ID_ESP, cod_funcionario);
 
-create index FKESP_ESP_IND
-     on ESPECIALIZA (ID_ESP);
+create index FKESP_PRO_IND
+     on ESPECIALIZA (cod_funcionario);
 
 create unique index ID_FUNCIONARIO_IND
      on FUNCIONARIO (cod_funcionario);
+
+create index FKPOSSUI_DEPENDENTE_IND
+     on FUNCIONARIO (POS_cod_funcionario);
 
 create unique index FKALU_GRA_IND
      on GRADUANDO (cod_aluno);
@@ -571,14 +598,17 @@ create unique index FKALU_GRA_IND
 create unique index ID_GRUPO_EXTENSAO_IND
      on GRUPO_EXTENSAO (cod_grupo);
 
-create unique index ID_MEMBRO_DE_IND
-     on MEMBRO_DE (cod_grupo, cod_aluno);
+create unique index ID_mandato_IND
+     on mandato (cod_funcionario, data_inicio, data_fim);
 
-create index FKMEM_ALU_IND
-     on MEMBRO_DE (cod_aluno);
+create unique index ID_MEMBRO_DE_IND
+     on MEMBRO_DE (cod_aluno, cod_grupo);
+
+create index FKMEM_GRU_IND
+     on MEMBRO_DE (cod_grupo);
 
 create unique index FKOFE_SEM_IND
-     on OFERECIDA_EM (codigo_disciplina, id_ano, id_semestre, cod_local, cod_funcionario);
+     on OFERECIDA_EM (id_ano, id_semestre);
 
 create index FKOFE_ESP_IND
      on OFERECIDA_EM (cod_local);
@@ -590,16 +620,16 @@ create index FKOFE_PRO_IND
      on OFERECIDA_EM (cod_funcionario);
 
 create unique index ID_ORGANIZA_IND
-     on ORGANIZA (cod_grupo, cod_atividade);
+     on ORGANIZA (cod_atividade, cod_grupo);
 
-create index FKORG_ATI_IND
-     on ORGANIZA (cod_atividade);
+create index FKORG_GRU_IND
+     on ORGANIZA (cod_grupo);
 
 create unique index ID_PARTICIPA_IND
-     on PARTICIPA (cod_aluno, cod_atividade);
+     on PARTICIPA (cod_atividade, cod_aluno);
 
-create index FKPAR_ATI_IND
-     on PARTICIPA (cod_atividade);
+create index FKPAR_ALU_IND
+     on PARTICIPA (cod_aluno);
 
 create unique index ID_PATRIMONIO_IND
      on PATRIMONIO (cod_patrimonio);
@@ -608,10 +638,10 @@ create unique index FKALU_POS_IND
      on POS_GRADUANDO (cod_aluno);
 
 create unique index ID_PRE_REQUISITO_IND
-     on PRE_REQUISITO (cod_disciplina, cod_requisito);
+     on PRE_REQUISITO (cod_requisito, cod_disciplina);
 
-create index FKPRECISA_DE_IND
-     on PRE_REQUISITO (cod_requisito);
+create index FKPRE_DIS_IND
+     on PRE_REQUISITO (cod_disciplina);
 
 create index FKPATRONO_IND
      on PROFESSOR (cod_grupo);
@@ -623,13 +653,13 @@ create index FKORIENTA_IND
      on PROFESSOR (cod_aluno);
 
 create unique index ID_REALIZA_MATRICULA_IND
-     on REALIZA_MATRICULA (cod_aluno, codigo_disciplina, id_ano, id_semestre);
-
-create index FKREA_SEM_IND
-     on REALIZA_MATRICULA (id_ano, id_semestre);
+     on REALIZA_MATRICULA (id_ano, id_semestre, codigo_disciplina, cod_aluno);
 
 create index FKREA_DIS_IND
      on REALIZA_MATRICULA (codigo_disciplina);
+
+create index FKREA_ALU_IND
+     on REALIZA_MATRICULA (cod_aluno);
 
 create unique index ID_SEMESTRE_IND
      on SEMESTRE (id_ano, id_semestre);
