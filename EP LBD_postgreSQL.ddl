@@ -58,7 +58,7 @@ create table AVALIADO_EM (
      presenca numeric(3) not null,
      codigo_disciplina numeric(6) not null,
      cod_aluno numeric(10) not null,
-     constraint FKAVA_SEM_ID primary key (id_ano, id_semestre));
+     constraint FKAVA_SEM_ID primary key (cod_aluno, codigo_disciplina, cod_semestre));
 
 create table CURSO (
      cod_curso numeric(10) not null,
@@ -148,7 +148,7 @@ create table OFERECIDA_EM (
      codigo_disciplina numeric(6) not null,
      cod_local numeric(4) not null,
      cod_funcionario numeric(8) not null,
-     constraint FKOFE_SEM_ID primary key (cod_semestre, cod_disciplina),
+     constraint FKOFE_SEM_ID primary key (cod_semestre, codigo_disciplina),
      constraint FKOFE_DIS_ID unique (codigo_disciplina));
 
 create table ORGANIZA (
@@ -194,7 +194,7 @@ create table SEMESTRE (
      cod_semestre numeric(10) not null,
      data_inicio date not null,
      data_fim date not null,
-     constraint ID_SEMESTRE_ID primary key (id_ano, id_semestre));
+     constraint ID_SEMESTRE_ID primary key (cod_semestre));
 
 create table TOPICO (
      codigo_disciplina numeric(6) not null,
@@ -254,9 +254,9 @@ alter table AUTOR_DE add constraint FKAUT_ART
      foreign key (cod_artigo)
      references ARTIGO;
 
-alter table AUTOR_DE add constraint FKAUT_ALU_FK
-     foreign key (cod_aluno)
-     references ALUNO;
+--alter table AUTOR_DE add constraint FKAUT_ALU_FK
+--     foreign key (cod_aluno)
+--     references ALUNO;
 
 alter table AVALIADO_EM add constraint FKAVA_SEM_FK
      foreign key (cod_semestre)
@@ -357,7 +357,7 @@ alter table ESPECIALIZA add constraint FKESP_PRO_FK
      references PROFESSOR;
 
 alter table ESPECIALIZA add constraint FKESP_ESP
-     foreign key (ID_ESP)
+     foreign key (cod_especialidade)
      references ESPECIALIDADE;
 
 alter table FUNCIONARIO add constraint FKPOSSUI_DEPENDENTE_FK
@@ -378,9 +378,6 @@ alter table GRADUANDO add constraint FKALU_GRA_FK
 --     check(exists(select * from PROFESSOR
 --                  where PROFESSOR.cod_grupo = cod_grupo)); 
 
-alter table mandato add constraint FKDIR_man
-     foreign key (cod_funcionario)
-     references DIRETOR;
 
 alter table MEMBRO_DE add constraint FKMEM_GRU_FK
      foreign key (cod_grupo)
@@ -391,7 +388,7 @@ alter table MEMBRO_DE add constraint FKMEM_ALU
      references ALUNO;
 
 alter table OFERECIDA_EM add constraint FKOFE_SEM_FK
-     foreign key (id_ano, id_semestre)
+     foreign key (cod_semestre)
      references SEMESTRE;
 
 alter table OFERECIDA_EM add constraint FKOFE_ESP_FK
@@ -440,9 +437,9 @@ alter table PRE_REQUISITO add constraint FKPRE_DIS_FK
      foreign key (cod_disciplina)
      references DISCIPLINA;
 
-alter table PROFESSOR add constraint FKPATRONO_FK
-     foreign key (cod_grupo)
-     references GRUPO_EXTENSAO;
+--alter table PROFESSOR add constraint FKPATRONO_FK
+--     foreign key (cod_grupo)
+ --    references GRUPO_EXTENSAO;
 
 --Not implemented
 --alter table PROFESSOR add constraint FKFUN_PRO_CHK
@@ -463,12 +460,13 @@ alter table PROFESSOR add constraint FKFUN_PRO_FK
      foreign key (cod_funcionario)
      references FUNCIONARIO;
 
-alter table PROFESSOR add constraint FKORIENTA_FK
-     foreign key (cod_aluno)
-     references POS_GRADUANDO;
+    
+--alter table PROFESSOR add constraint FKORIENTA_FK
+ --    foreign key (cod_aluno)
+  --   references POS_GRADUANDO;
 
 alter table REALIZA_MATRICULA add constraint FKREA_SEM
-     foreign key (id_ano, id_semestre)
+     foreign key (cod_semestre)
      references SEMESTRE;
 
 alter table REALIZA_MATRICULA add constraint FKREA_DIS_FK
