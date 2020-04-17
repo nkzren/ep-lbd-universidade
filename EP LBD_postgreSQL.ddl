@@ -68,8 +68,8 @@ create table AVALIADO_EM (
 
 create table CURSO (
      cod_curso numeric(10) not null,
-     nome_curso char(1) not null,
-     area_conhecimento char(1) not null,
+     nome_curso varchar(255) not null,
+     area_conhecimento varchar(255) not null,
      data_inicio date not null,
      qtd_semestres numeric(2) not null,
      carga_horaria numeric(1) not null,
@@ -510,10 +510,6 @@ create index FKAVA_DIS_IND
 
 create index FKAVA_ALU_IND
      on AVALIADO_EM (cod_aluno);
-
-
-create index FKASSOCIADO_A_IND
-     on CURSO (cod_funcionario);
 
 create index FKESP_PRO_IND
      on ESPECIALIZA (cod_funcionario);
