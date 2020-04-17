@@ -244,6 +244,19 @@ alter table ALUNO add constraint EXTONE_ALUNO
            or (POS_GRADUANDO is null and GRADUANDO is not null and ALUNO_ESPECIAL is null)
            or (POS_GRADUANDO is null and GRADUANDO is null and ALUNO_ESPECIAL is not null)); 
 
+	       
+alter table aluno add constraint FKOUT_esp
+     foreign key (ALUNO_ESPECIAL)
+     references ALUNO_ESPECIAL;
+
+alter table aluno add constraint FKAUT_grad
+     foreign key (GRADUANDO)
+     references GRADUANDO;
+          
+alter table aluno add constraint FKAUT_posgrad
+     foreign key (POS_GRADUANDO)
+     references POS_GRADUANDO;
+          
 
 alter table ATIVIDADE_EXTRACURRICULAR add constraint FKREALIZADA_EM_FK
      foreign key (cod_local)
