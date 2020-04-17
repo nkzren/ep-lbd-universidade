@@ -129,7 +129,6 @@ create table FUNCIONARIO (
      sobrenome varchar(50) not null,
      data_nascimento date not null,
      salario numeric(5,2) not null,
-     POS_cod_funcionario numeric(8) not null,
      constraint ID_FUNCIONARIO primary key (cod_funcionario));
 
 create table GRADUANDO (
@@ -361,10 +360,6 @@ alter table ESPECIALIZA add constraint FKESP_ESP
      foreign key (cod_especialidade)
      references ESPECIALIDADE;
 
-alter table FUNCIONARIO add constraint FKPOSSUI_DEPENDENTE_FK
-     foreign key (POS_cod_funcionario)
-     references DEPENDENTE;
-
 
 --Not implemented
 --alter table GRUPO_EXTENSAO add constraint ID_GRUPO_EXTENSAO_CHK
@@ -495,6 +490,10 @@ alter table ALUNO_ESPECIAL add constraint FKALUNO_UNI
 foreign key (cod_universidade_externa)
 references UNIVERSIDADE_EXTERNA;
 
+alter table POS_GRADUANDO add constraint FKPOS_PROFESSOR
+foreign key (cod_orientador)
+references PROFESSOR;
+
 -- Index Section
 -- _____________ 
 
@@ -524,9 +523,6 @@ create index FKEQU_ESP_IND
 
 create index FKESP_PRO_IND
      on ESPECIALIZA (cod_funcionario);
-
-create index FKPOSSUI_DEPENDENTE_IND
-     on FUNCIONARIO (POS_cod_funcionario);
 
 create index FKMEM_GRU_IND
      on MEMBRO_DE (cod_grupo);
