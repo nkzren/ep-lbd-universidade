@@ -33,8 +33,8 @@ create table ALUNO_ESPECIAL (
 create table UNIVERSIDADE_EXTERNA (
      cod_universidade_externa numeric(10) not null,
      nome varchar(50) not null,
-     pais varchar(50) not null
-     constraint ID_UNIVERSIDADE primary key (cod_universidade));
+     pais varchar(50) not null,
+     constraint ID_UNIVERSIDADE primary key (cod_universidade_externa));
 
 create table ARTIGO (
      cod_artigo numeric(10) not null,
@@ -275,13 +275,17 @@ alter table AVALIADO_EM add constraint FKAVA_ALU_FK
 --     check(exists(select * from EMENTA
 --                  where EMENTA.cod_curso = cod_curso)); 
 
-alter table CURSO add constraint FKCURSA_FK
-     foreign key (cod_aluno)
-     references ALUNO;
+    
+    --n foi
+--alter table CURSO add constraint FKCURSA_FK
+  --   foreign key (cod_aluno)
+    -- references ALUNO;
 
-alter table CURSO add constraint FKASSOCIADO_A_FK
-     foreign key (cod_funcionario)
-     references PROFESSOR;
+    
+    -- n foi
+--alter table CURSO add constraint FKASSOCIADO_A_FK
+--     foreign key (cod_funcionario)
+  --   references PROFESSOR;
 
 alter table DEPENDENTE add constraint ID_DEPEN_FUNCI_FK
      foreign key (cod_funcionario)
