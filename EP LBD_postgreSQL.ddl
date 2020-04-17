@@ -19,19 +19,20 @@ create table ALUNO (
 
 create table CIDADE_ESTADO_PAIS(
      cod_cidade numeric(10) not null,
-     cidade varchar(20),
-     estado varchar(20),
-     pais varchar(20),
+     cidade_nascimento varchar(20),
+     estado_nascimento varchar(20),
+     pais_nascimento varchar(20),
      constraint ID_CIDADE_ESTADO_PAIS primary key (cod_cidade));
 
 
 create table ALUNO_ESPECIAL (
      cod_aluno_especial numeric(10) not null,
-     cod_universidade_externa numeric(10) not null,
+     cod_universidade numeric(10) not null,
+     cod_curso numeric(10) not null,
      constraint FKALU_ALU_ID primary key (cod_aluno_especial));
 
-create table UNIVERSIDADE_EXTERNA (
-     cod_universidade_externa numeric(10) not null,
+create table UNIVERSIDADE_PAIS (
+     cod_universidade numeric(10) not null,
      nome varchar(50) not null,
      pais varchar(50) not null,
      constraint ID_UNIVERSIDADE primary key (cod_universidade_externa));
@@ -95,11 +96,6 @@ create table DISCIPLINA (
      nome_disciplina varchar(30) not null,
      constraint ID_DISCIPLINA_ID primary key (cod_disciplina));
 
-create table EMENTA (
-     cod_curso numeric(4) not null,
-     cod_disciplina numeric(6) not null,
-     constraint ID_EMENTA primary key (cod_curso, cod_disciplina));
-
 create table EQUIPAM (
      cod_local numeric(4) not null,
      cod_patrimonio numeric(3) not null,
@@ -120,7 +116,7 @@ create table ESPECIALIDADE (
 create table ESPECIALIZA (
      cod_especialidade numeric(10) not null,
      cod_funcionario numeric(8) not null,
-     constraint ID_ESPECIALIZA primary key (cod_especialidade));
+     constraint ID_ESPECIALIZA primary key (cod_especialidade, cod_funcionario));
 
 create table FUNCIONARIO (
      cod_funcionario numeric(10) not null,
@@ -133,6 +129,7 @@ create table FUNCIONARIO (
 
 create table GRADUANDO (
      cod_graduando numeric(10) not null,
+     cod_curso numeric (10) not null,
      constraint FKALU_GRA_ID primary key (cod_graduando));
 
 create table GRUPO_EXTENSAO (
@@ -191,7 +188,7 @@ create table REALIZA_MATRICULA (
      cod_disciplina numeric(6) not null,
      cod_semestre numeric(10) not null,
      timestamp date not null,
-     constraint ID_REALIZA_MATRICULA primary key (cod_disciplina, cod_aluno));
+     constraint ID_REALIZA_MATRICULA primary key (cod_disciplina, cod_aluno, cod_semestre));
 
 create table SEMESTRE (
      cod_semestre numeric(10) not null,
@@ -203,12 +200,12 @@ create table TOPICO (
      cod_disciplina numeric(6) not null,
      cod_topico varchar(20) not null,
      nome_topico varchar(10) not null,
-     constraint ID_TOPICO primary key (cod_topico));
-
+     constraint ID_TOPICO primary key (cod_topico, cod_disciplina));
 
 create table PATRONO_GRUPO_EXTENSAO(
      cod_grupo numeric(10) not null,
      cod_funcionario numeric(10) not null
+     constraint ID_PATRONO_GRUPO_EXTENSAO primary key (cod_grupo, cod_funcionario));
 );
 
 
@@ -325,14 +322,6 @@ alter table DIRETOR add constraint FKFUN_DIR_FK
 --     check(exists(select * from REALIZA_MATRICULA
 --                  where REALIZA_MATRICULA.cod_disciplina = cod_disciplina)); 
 
-alter table EMENTA add constraint FKEME_DIS_FK
-     foreign key (cod_disciplina)
-     references DISCIPLINA;
-
-alter table EMENTA add constraint FKEME_CUR
-     foreign key (cod_curso)
-     references CURSO;
-
 alter table EQUIPAM add constraint FKEQU_PAT
      foreign key (cod_patrimonio)
      references PATRIMONIO;
@@ -363,7 +352,6 @@ alter table ESPECIALIZA add constraint FKESP_PRO_FK
 alter table ESPECIALIZA add constraint FKESP_ESP
      foreign key (cod_especialidade)
      references ESPECIALIDADE;
-
 
 --Not implemented
 --alter table GRUPO_EXTENSAO add constraint ID_GRUPO_EXTENSAO_CHK
@@ -497,6 +485,10 @@ references UNIVERSIDADE_EXTERNA;
 alter table POS_GRADUANDO add constraint FKPOS_PROFESSOR
 foreign key (cod_orientador)
 references PROFESSOR;
+
+alter table GRADUANDO add constraint FKCOD_CURSO
+     foreign key (cod_curso)
+     references CURSO;
 
 -- Index Section
 -- _____________ 
