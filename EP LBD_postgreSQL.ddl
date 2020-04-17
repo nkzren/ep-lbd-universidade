@@ -150,6 +150,10 @@ create table OFERECIDA_EM (
      cod_funcionario numeric(8) not null,
      constraint FKOFE_SEM_ID primary key (cod_semestre, cod_disciplina),
      constraint FKOFE_DIS_ID unique (cod_disciplina));
+	 
+alter table OFERECIDA_EM
+add column dia_semana numeric(1) not null, 
+add column horario_aula time(6) not null;
 
 create table ORGANIZA (
      cod_atividade numeric(10) not null,
