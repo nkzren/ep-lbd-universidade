@@ -1,0 +1,21 @@
+Selecionar média, identificador do aluno e semestre para alunos que tiveram uma média semestral menor que 8 durante o mandato de um diretor específico:
+
+select avg(ae.nota), ae.cod_aluno, ae.cod_semestre from aluno
+inner join avaliado_em ae on aluno.cod_aluno = ae.cod_aluno
+inner join semestre s on s.cod_semestre = ae.cod_semestre
+where s.cod_semestre in (
+    select semestre.cod_semestre from semestre
+    where semestre.data_inicio >= (select diretor.data_inicio_mandato from diretor where cod_funcionario = 1)
+    and semestre.data_inicio <= (select diretor.data_fim_mandato from diretor where cod_funcionario = 1)
+)
+group by ae.cod_semestre, ae.cod_aluno
+having avg(ae.nota) < 8;
+
+Selecionar a quantidade de alunos que participam de grupos de extensão por curso:
+
+select count(g.*) as quantidade_de_alunos, g.cod_curso as curso from graduando g
+inner join aluno a on a.graduando = g.cod_graduando
+where exists (select * from membro_de md where md.cod_aluno = a.cod_aluno)
+group by g.cod_curso;
+
+
