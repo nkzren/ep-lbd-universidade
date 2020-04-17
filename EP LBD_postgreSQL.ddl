@@ -19,9 +19,9 @@ create table ALUNO (
 
 create table CIDADE_ESTADO_PAIS(
      cod_cidade numeric(10) not null,
-     cidade_nascimento varchar(20),
-     estado_nascimento varchar(20),
-     pais_nascimento varchar(20),
+     cidade varchar(20) not null,
+     estado varchar(20),
+     pais varchar(20),
      constraint ID_CIDADE_ESTADO_PAIS primary key (cod_cidade));
 
 
@@ -35,7 +35,7 @@ create table UNIVERSIDADE_PAIS (
      cod_universidade numeric(10) not null,
      nome varchar(50) not null,
      pais varchar(50) not null,
-     constraint ID_UNIVERSIDADE primary key (cod_universidade_externa));
+     constraint ID_UNIVERSIDADE primary key (cod_universidade));
 
 create table ARTIGO (
      cod_artigo numeric(10) not null,
@@ -479,8 +479,12 @@ alter table topico add constraint FKDIS_top
      references DISCIPLINA;
 
 alter table ALUNO_ESPECIAL add constraint FKALUNO_UNI
-foreign key (cod_universidade_externa)
-references UNIVERSIDADE_EXTERNA;
+foreign key (cod_universidade)
+references UNIVERSIDADE_PAIS;
+
+alter table ALUNO_ESPECIAL add constraint FKACOD_CURSO
+     foreign key (cod_curso)
+     references CURSO;
 
 alter table POS_GRADUANDO add constraint FKPOS_PROFESSOR
 foreign key (cod_orientador)
