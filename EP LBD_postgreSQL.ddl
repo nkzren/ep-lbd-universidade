@@ -204,9 +204,8 @@ create table TOPICO (
 
 create table PATRONO_GRUPO_EXTENSAO(
      cod_grupo numeric(10) not null,
-     cod_funcionario numeric(10) not null
+     cod_funcionario numeric(10) not null,
      constraint ID_PATRONO_GRUPO_EXTENSAO primary key (cod_grupo, cod_funcionario));
-);
 
 
 -- Constraints Section
@@ -214,8 +213,7 @@ create table PATRONO_GRUPO_EXTENSAO(
 
 --Not implemented
 --alter table ALUNO add constraint ID_ALUNO_CHK
---     check(exists(select * from AUTOR_DE
-                  where AUTOR_DE.cod_aluno = cod_aluno)); 
+--     check(exists(select * from AUTOR_DE where AUTOR_DE.cod_aluno = cod_aluno)); 
 
 --Not implemented
 --alter table ALUNO add constraint ID_ALUNO_CHK
@@ -509,17 +507,9 @@ create index FKAVA_DIS_IND
 create index FKAVA_ALU_IND
      on AVALIADO_EM (cod_aluno);
 
-create index FKCURSA_IND
-     on CURSO (cod_aluno);
 
 create index FKASSOCIADO_A_IND
      on CURSO (cod_funcionario);
-
-create index FKEME_DIS_IND
-     on EMENTA (cod_disciplina);
-
-create index FKEQU_ESP_IND
-     on EQUIPAM (cod_local);
 
 create index FKESP_PRO_IND
      on ESPECIALIZA (cod_funcionario);
@@ -542,11 +532,6 @@ create index FKPAR_ALU_IND
 create index FKPRE_DIS_IND
      on PRE_REQUISITO (cod_disciplina);
 
-create index FKPATRONO_IND
-     on PROFESSOR (cod_grupo);
-
-create index FKORIENTA_IND
-     on PROFESSOR (cod_aluno);
 
 create index FKREA_DIS_IND
      on REALIZA_MATRICULA (cod_disciplina);
