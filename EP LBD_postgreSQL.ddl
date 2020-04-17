@@ -185,7 +185,7 @@ create table PRE_REQUISITO (
 create table PROFESSOR (
      cod_funcionario numeric(8) not null,
      num_licensa numeric(8) not null,
-     constraint FKFUN_PRO_ID primary key (cod_funcionario));
+     constraint FKFUN_PRO_ID primary key (num_licensa));
 
 create table REALIZA_MATRICULA (
      cod_aluno numeric(10) not null,
