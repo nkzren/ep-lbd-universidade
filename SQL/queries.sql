@@ -1,5 +1,4 @@
-Selecionar média, identificador do aluno e semestre para alunos que tiveram uma média semestral menor que 8 durante o mandato de um diretor específico:
-
+-- Selecionar média, identificador do aluno e semestre para alunos que tiveram uma média semestral menor que 8 durante o mandato de um diretor específico:
 select avg(ae.nota), ae.cod_aluno, ae.cod_semestre from aluno
 inner join avaliado_em ae on aluno.cod_aluno = ae.cod_aluno
 inner join semestre s on s.cod_semestre = ae.cod_semestre
@@ -19,3 +18,16 @@ where exists (select * from membro_de md where md.cod_aluno = a.cod_aluno)
 group by g.cod_curso;
 
 
+-- Mostra ano a ano quantas atividades foram realizadas em espacos com projetor e capacidade para mais de 100 pessoas nos ultimos 5 anos
+WITH t AS (
+	SELECT e.*, EXTRACT(YEAR FROM data_hora_inicio) as ano
+	FROM (atividade_extracurricular atv inner join espaco e on atv.cod_local = e.cod_local)
+)
+SELECT ano, count(*) from t
+WHERE capacidade > 100 
+AND ano > EXTRACT(YEAR FROM CURRENT_DATE)::numeric - 5
+AND cod_local IN (
+	SELECT sp.cod_local FROM espaco sp INNER JOIN patrimonio pa on sp.cod_local = pa.cod_local
+	WHERE tipo_patrimonio = 'projetor'
+)
+GROUP BY ano

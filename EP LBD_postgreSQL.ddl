@@ -96,11 +96,6 @@ create table DISCIPLINA (
      nome_disciplina varchar(30) not null,
      constraint ID_DISCIPLINA_ID primary key (cod_disciplina));
 
-create table EQUIPAM (
-     cod_local numeric(4) not null,
-     cod_patrimonio numeric(3) not null,
-     constraint ID_EQUIPAM primary key (cod_patrimonio, cod_local));
-
 create table ESPACO (
      cod_local numeric(10) not null,
      capacidade numeric(3) not null,
@@ -109,7 +104,7 @@ create table ESPACO (
 
 create table ESPECIALIDADE (
      cod_especialidade numeric(10) not null,
-     area_conhecimento varchar(20) not null,
+     area_conhecimento varchar(20) not null, 	
      nome_especialidade varchar(20) not null,
      constraint ID_ESPECIALIDADE primary key (cod_especialidade));
 
@@ -378,6 +373,11 @@ alter table ESPECIALIZA add constraint FKESP_ESP
 --     check(exists(select * from PROFESSOR
 --                  where PROFESSOR.cod_grupo = cod_grupo)); 
 
+ALTER TABLE patrimonio
+ADD COLUMN cod_local numeric(4);
+
+ALTER TABLE patrimonio
+ADD CONSTRAINT EQUIPAM_FK foreign key(cod_local) references espaco;
 
 alter table MEMBRO_DE add constraint FKMEM_GRU_FK
      foreign key (cod_grupo)
