@@ -1,6 +1,3 @@
-create database universidade;
-
-
 -- Tables Section
 -- _____________ 
 
@@ -332,14 +329,6 @@ alter table DIRETOR add constraint FKFUN_DIR_FK
 --     check(exists(select * from REALIZA_MATRICULA
 --                  where REALIZA_MATRICULA.cod_disciplina = cod_disciplina)); 
 
-alter table EQUIPAM add constraint FKEQU_PAT
-     foreign key (cod_patrimonio)
-     references PATRIMONIO;
-
-alter table EQUIPAM add constraint FKEQU_ESP_FK
-     foreign key (cod_local)
-     references ESPACO;
-
 --Not implemented
 --alter table ESPACO add constraint ID_ESPACO_CHK
 --     check(exists(select * from EQUIPAM
@@ -551,3 +540,6 @@ create index FKREA_DIS_IND
 
 create index FKREA_ALU_IND
      on REALIZA_MATRICULA (cod_aluno);
+	 
+	 
+
