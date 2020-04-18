@@ -20726,9 +20726,19 @@ INSERT INTO public.diretor (cod_funcionario,data_inicio_mandato,data_fim_mandato
 ,(544,'2003-01-01','2023-01-01')
 ;
 
+-- Dados abaixo modificados para atender as queries
 update espaco
 set capacidade = capacidade * -1
 where capacidade < 0
 
 update patrimonio
 set tipo_patrimonio = 'projetor'
+
+update semestre
+set data_inicio = data_inicio + interval '10 years', data_fim = data_fim + interval '10 years'
+
+insert into realiza_matricula(cod_aluno, cod_disciplina, cod_semestre, timestamp) values (6, 1, 74117, now());
+insert into realiza_matricula(cod_aluno, cod_disciplina, cod_semestre, timestamp) values (6, 1, 952559, now());
+insert into realiza_matricula(cod_aluno, cod_disciplina, cod_semestre, timestamp) values (6, 2, 74117, now());
+
+insert into pre_requisito(cod_disciplina, cod_requisito) values (2, 1);
