@@ -18,7 +18,7 @@ inner join aluno a on a.graduando = g.cod_graduando
 where exists (select * from membro_de md where md.cod_aluno = a.cod_aluno)
 group by g.cod_curso;
 
--- Mostra ano a ano quantas atividades foram realizadas em espacos com projetor e capacidade para mais de 100 pessoas nos ultimos 5 anos
+-- Mostra ano a ano quantas atividades foram realizadas em espacos com projetor e capacidade para mais de 100 pessoas nos ultimos 20 anos
 
 WITH t AS (
 	SELECT e.*, EXTRACT(YEAR FROM data_hora_inicio) as ano
@@ -26,7 +26,7 @@ WITH t AS (
 )
 SELECT ano, count(*) from t
 WHERE capacidade > 100 
-AND ano > EXTRACT(YEAR FROM CURRENT_DATE)::numeric - 5
+AND ano > EXTRACT(YEAR FROM CURRENT_DATE)::numeric - 20
 AND cod_local IN (
 	SELECT sp.cod_local FROM espaco sp INNER JOIN patrimonio pa on sp.cod_local = pa.cod_local
 	WHERE tipo_patrimonio = 'projetor'
