@@ -1,3 +1,17 @@
+INSERT INTO public.dependente (cod_funcionario,cod_dependente,nome,sobrenome,relacionamento) VALUES 
+(123,1,'matheus','each','filho')
+,(123,2,'isabelle','each','filho')
+,(123,3,'clarice','each','filho')
+,(123,4,'renan','each','filho')
+
+INSERT INTO public.dependente (cod_funcionario,cod_dependente,nome,sobrenome,relacionamento) VALUES 
+(123,5,'joão','each','filho')
+
+INSERT INTO public.dependente (cod_funcionario,cod_dependente,nome,sobrenome,relacionamento) VALUES 
+(123,6,'maria','each','filho')
+
+
+--Ao cadastrar novo dependente, é adicionado um bônus salarial de 200 reais. Só pode ter esse bônus para no máximo 3 filhos
 CREATE OR REPLACE FUNCTION adiciona_bonus_dependente() RETURNS TRIGGER AS $$
 BEGIN
     IF 3 >= (SELECT count(*) FROM dependente where cod_funcionario = NEW.cod_funcionario) THEN
