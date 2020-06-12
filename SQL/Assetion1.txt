@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION regra_mandato() RETURNS TRIGGER AS $$
 			((d1.data_inicio_mandato >= d2.data_inicio_mandato AND d1.data_inicio_mandato <= d2.data_fim_mandato) OR
 			(d1.data_fim_mandato >= d2.data_inicio_mandato AND d1.data_fim_mandato <= d2.data_fim_mandato))
 		) THEN
-            RAISE EXCEPTION 'This settlement is locked';
+            RAISE EXCEPTION 'Impossível adicionar mandato';
         END IF;
         RETURN NULL;
     END;
