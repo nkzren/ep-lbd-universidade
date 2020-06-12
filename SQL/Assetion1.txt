@@ -1,0 +1,25 @@
+--impede a inserção de disicplinas que sejam requisitos dela mesma
+--impede também a inserção de uma disicplina X que tem requisito Y quando a disiciplina Y já tem requisito X
+
+CREATE OR REPLACE FUNCTION regra_pre_requisito() RETURNS TRIGGER AS $$
+ 	BEGIN
+        IF EXISTS (SELECT * FROM Pre_Requisito p, Pre_Requisito r  WHERE p.cod_disciplina = r.cod_requisito AND r.cod_disciplina = p.cod_requisito) THEN
+            RAISE EXCEPTION 'Impossível adicionar esse requisito';
+        END IF;
+        RETURN NULL;
+    END;
+  $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER regra_pre_requisito_trigger AFTER INSERT ON Pre_Requisito
+FOR EACH ROW
+EXECUTE PROCEDURE regra_pre_requisito();
+
+
+--o comando abaixo pode ser executado
+INSERT INTO Pre_Requisito (745, 785);
+
+--o comando abaixo gera erro
+INSERT INTO Pre_Requisito (754, 754);
+
+--o comando abaixo gera erro
+INSERT INTO Pre_Requisito (785, 745);
