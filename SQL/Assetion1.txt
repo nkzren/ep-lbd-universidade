@@ -16,10 +16,10 @@ EXECUTE PROCEDURE regra_pre_requisito();
 
 
 --o comando abaixo pode ser executado
-INSERT INTO Pre_Requisito (745, 785);
+INSERT INTO Pre_Requisito VALUES (745, 785);
 
 --o comando abaixo gera erro
-INSERT INTO Pre_Requisito (754, 754);
+INSERT INTO Pre_Requisito VALUES (754, 754);
 
 --o comando abaixo gera erro
-INSERT INTO Pre_Requisito (785, 745);
+INSERT INTO Pre_Requisito VALUES (785, 745);
