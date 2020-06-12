@@ -1,3 +1,5 @@
+--cria view que otimiza consultas sobre matrícula e atividade cotidiana de alunos
+
 CREATE VIEW informacoes_disciplina AS (
     SELECT 
         d.nome_disciplina,
