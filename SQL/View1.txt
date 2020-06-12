@@ -1,3 +1,5 @@
+--cria view para omitir dados PII de alunos
+
 CREATE VIEW seguranca_info AS(SELECT
     nome_disciplina,
     s.data_inicio,
