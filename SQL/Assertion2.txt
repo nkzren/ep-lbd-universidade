@@ -3,14 +3,14 @@
 CREATE OR REPLACE FUNCTION regra_mandato() RETURNS TRIGGER AS $$
  	BEGIN
         IF EXISTS (
-        (SELECT * FROM DIRETOR d  WHERE d.data_inicio_mandato > d.data_fim_mandato) 
-			OR 
-		(SELECT * FROM DIRETOR d1, DIRETOR d2  WHERE 
-			(d1.cod_funcionario != d2.cod_funcionario) AND 
-			((d1.data_inicio_mandato >= d2.data_inicio_mandato AND d1.data_inicio_mandato <= d2.data_fim_mandato) OR 
+            SELECT * FROM DIRETOR d  WHERE d.data_inicio_mandato > d.data_fim_mandato)
+		OR EXISTS
+		(SELECT * FROM DIRETOR d1, DIRETOR d2  WHERE
+			(d1.cod_funcionario != d2.cod_funcionario) AND
+			((d1.data_inicio_mandato >= d2.data_inicio_mandato AND d1.data_inicio_mandato <= d2.data_fim_mandato) OR
 			(d1.data_fim_mandato >= d2.data_inicio_mandato AND d1.data_fim_mandato <= d2.data_fim_mandato))
 		) THEN
-            RAISE EXCEPTION 'Impossível adicionar diretor com essas datas de mandato';
+            RAISE EXCEPTION 'This settlement is locked';
         END IF;
         RETURN NULL;
     END;
