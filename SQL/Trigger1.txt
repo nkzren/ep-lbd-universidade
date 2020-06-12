@@ -39,3 +39,20 @@ EXECUTE PROCEDURE matricula_novo_aluno()
 
 -- Descomentar abaixo para visualizar a tabela
 -- SELECT * FROM realiza_matricula
+
+-- SQL Padrão
+-- CREATE TRIGGER novo_aluno AFTER INSERT ON graduando
+-- REFERENCING NEW ROW AS nrow
+-- FOR EACH ROW
+-- BEGIN ATOMIC
+--    INSERT INTO realiza_matricula (cod_aluno, cod_disciplina, cod_semestre, "timestamp")
+--    SELECT nrow.cod_graduando, oferecida_em.cod_disciplina, oferecida_em.cod_semestre, CURRENT_TIMESTAMP
+--    FROM oferecida_em
+--    WHERE cod_semestre = 1 AND ( 
+--        cod_disciplina = 10001 OR 
+--        cod_disciplina = 10002 OR
+--        cod_disciplina = 10003 OR
+--        cod_disciplina = 10004 OR
+--        cod_disciplina = 10005
+--    );
+-- END;
