@@ -1,10 +1,17 @@
 --impede a inserção de disicplinas que sejam requisitos dela mesma
 --impede também a inserção de uma disicplina X que tem requisito Y quando a disiciplina Y já tem requisito X
 
-CREATE OR REPLACE FUNCTION regra_pre_requisito() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION regra_mandato() RETURNS TRIGGER AS $$
  	BEGIN
-        IF EXISTS (SELECT * FROM Pre_Requisito p, Pre_Requisito r  WHERE p.cod_disciplina = r.cod_requisito AND r.cod_disciplina = p.cod_requisito) THEN
-            RAISE EXCEPTION 'Impossível adicionar esse requisito';
+        IF EXISTS (
+            SELECT * FROM DIRETOR d  WHERE d.data_inicio_mandato > d.data_fim_mandato)
+		OR EXISTS
+		(SELECT * FROM DIRETOR d1, DIRETOR d2  WHERE
+			(d1.cod_funcionario != d2.cod_funcionario) AND
+			((d1.data_inicio_mandato >= d2.data_inicio_mandato AND d1.data_inicio_mandato <= d2.data_fim_mandato) OR
+			(d1.data_fim_mandato >= d2.data_inicio_mandato AND d1.data_fim_mandato <= d2.data_fim_mandato))
+		) THEN
+            RAISE EXCEPTION 'This settlement is locked';
         END IF;
         RETURN NULL;
     END;
@@ -16,10 +23,10 @@ EXECUTE PROCEDURE regra_pre_requisito();
 
 
 --o comando abaixo pode ser executado
-INSERT INTO Pre_Requisito (745, 785);
+INSERT INTO Pre_Requisito VALUES (20, 150);
 
 --o comando abaixo gera erro
-INSERT INTO Pre_Requisito (754, 754);
+INSERT INTO Pre_Requisito VALUES (170, 170);
 
 --o comando abaixo gera erro
-INSERT INTO Pre_Requisito (785, 745);
+INSERT INTO Pre_Requisito VALUES (150, 20);
