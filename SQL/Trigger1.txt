@@ -1,3 +1,6 @@
+INSERT INTO semestre (cod_semestre, data_inicio, data_fim) VALUES
+(1, '2019-02-01', '2019-07-01');
+
 INSERT INTO public.disciplina(cod_disciplina, cod_curso, nome_disciplina) VALUES
 (10001, 1, 'Cálculo 1'),
 (10002, 1, 'Introdução à Programação'),
